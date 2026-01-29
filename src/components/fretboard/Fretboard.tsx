@@ -23,23 +23,46 @@ export function Fretboard({ sequence, currentIndex, noteStates, maxFret = 7 }: F
   const frets = Array.from({ length: maxFret + 1 }, (_, i) => i);
   const strings: StringNumber[] = [1, 2, 3, 4, 5, 6];
 
-  // Retourne l'index du step SI cette position doit être affichée (step actuel ou déjà joué)
-  const getNoteAtPosition = (stringNum: StringNumber, fret: number): number | null => {
+  // Retourne tous les indices des steps qui contiennent cette position
+  const getNotesAtPosition = (stringNum: StringNumber, fret: number): number[] => {
+    const indices: number[] = [];
     for (let i = 0; i < sequence.length; i++) {
       const step = sequence[i];
       const isInStep = step.some((note) => note.string === stringNum && note.fret === fret);
       if (isInStep) {
-        // N'afficher que le step actuel (les steps passés sont déjà validés)
-        if (i === currentIndex) {
-          return i;
-        }
+        indices.push(i);
       }
     }
-    return null;
+    return indices;
+  };
+
+  // Retourne l'index le plus pertinent à afficher (priorité: actuel > prochain > passé)
+  const getMostRelevantIndex = (indices: number[]): number | null => {
+    if (indices.length === 0) return null;
+
+    // Si l'index actuel est dans la liste, le retourner
+    if (indices.includes(currentIndex)) return currentIndex;
+
+    // Sinon, retourner le prochain index non joué
+    const futureIndices = indices.filter(i => i > currentIndex);
+    if (futureIndices.length > 0) return Math.min(...futureIndices);
+
+    // Sinon, retourner le dernier joué
+    return Math.max(...indices);
   };
 
   const getMarkerStyle = (noteIndex: number): string => {
-    return 'bg-amber-500 text-gray-900 shadow-lg shadow-amber-500/50 scale-110';
+    const state = noteStates[noteIndex];
+    const isCurrent = noteIndex === currentIndex;
+
+    if (isCurrent) {
+      return 'bg-amber-500 text-gray-900 shadow-lg shadow-amber-500/50 scale-110';
+    }
+    if (state === 'success') {
+      return 'bg-emerald-500/80 text-white';
+    }
+    // Notes futures (waiting)
+    return 'bg-[#374151] text-gray-400';
   };
 
   return (
@@ -97,7 +120,8 @@ export function Fretboard({ sequence, currentIndex, noteStates, maxFret = 7 }: F
               <div key={stringNum} className="flex items-center h-10 relative">
                 {/* Frets */}
                 {frets.map((fret) => {
-                  const noteIndex = getNoteAtPosition(stringNum, fret);
+                  const noteIndices = getNotesAtPosition(stringNum, fret);
+                  const noteIndex = getMostRelevantIndex(noteIndices);
                   const hasNote = noteIndex !== null;
 
                   return (
@@ -135,9 +159,12 @@ export function Fretboard({ sequence, currentIndex, noteStates, maxFret = 7 }: F
                       {/* Note marker */}
                       {hasNote && noteIndex !== null && (
                         <div
-                          className={`relative z-10 w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all ${getMarkerStyle(noteIndex)}`}
+                          className={`relative z-10 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${getMarkerStyle(noteIndex)}`}
                         >
-                          {noteIndex + 1}
+                          {noteIndices.length > 1
+                            ? noteIndices.map(i => i + 1).join('·')
+                            : noteIndex + 1
+                          }
                         </div>
                       )}
                     </div>
