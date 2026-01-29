@@ -1,0 +1,94 @@
+{
+  "cheatcodes": [
+    {
+      "id": "waka-001",
+      "name": "Wakagratte - Base",
+      "difficulty": "easy",
+      "tempo": 80,
+      "description": "Le cheat code original. 3 double stops.",
+      "sequence": [
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }],
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }],
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }]
+      ]
+    },
+    {
+      "id": "waka-002",
+      "name": "Wakagratte - Double",
+      "difficulty": "easy",
+      "tempo": 90,
+      "description": "Le pattern de base répété deux fois.",
+      "sequence": [
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }],
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }],
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }],
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }],
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }],
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }]
+      ]
+    },
+    {
+      "id": "waka-003",
+      "name": "Wakagratte - Groove",
+      "difficulty": "medium",
+      "tempo": 100,
+      "description": "Le pattern avec des notes de remplissage entre les double stops.",
+      "sequence": [
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }],
+        [{ "string": 5, "fret": 0 }],
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }],
+        [{ "string": 6, "fret": 0 }],
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }],
+        [{ "string": 4, "fret": 0 }]
+      ]
+    },
+    {
+      "id": "waka-004",
+      "name": "Wakagratte - Shuffle",
+      "difficulty": "medium",
+      "tempo": 95,
+      "description": "Le pattern avec un rythme shuffle et des basses alternées.",
+      "sequence": [
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }],
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }],
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }],
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }],
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }],
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }]
+      ]
+    },
+    {
+      "id": "waka-005",
+      "name": "Wakagratte - Ascending",
+      "difficulty": "medium",
+      "tempo": 90,
+      "description": "Le pattern avec une montée mélodique à la fin.",
+      "sequence": [
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }],
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }],
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }],
+        [{ "string": 3, "fret": 4 }, { "string": 2, "fret": 3 }],
+        [{ "string": 2, "fret": 5 }, { "string": 1, "fret": 3 }]
+      ]
+    },
+    {
+      "id": "waka-006",
+      "name": "Wakagratte - Full",
+      "difficulty": "hard",
+      "tempo": 110,
+      "description": "Le pattern complet avec remplissage et variations.",
+      "sequence": [
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }],
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }],
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }],
+        [{ "string": 4, "fret": 0 }],
+        [{ "string": 5, "fret": 0 }],
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }],
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }],
+        [{ "string": 6, "fret": 0 }],
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }],
+        [{ "string": 3, "fret": 4 }, { "string": 2, "fret": 3 }]
+      ]
+    }
+  ]
+}
