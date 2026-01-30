@@ -1,0 +1,254 @@
+{
+  "songs": [
+    {
+      "id": "ode-to-joy",
+      "title": "Ode a la Joie",
+      "artist": "Ludwig van Beethoven",
+      "difficulty": "easy",
+      "category": "classical",
+      "tempo": 100,
+      "sequence": [
+        [{"string": 1, "fret": 3}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 1, "fret": 5}],
+        [{"string": 1, "fret": 7}],
+        [{"string": 1, "fret": 7}],
+        [{"string": 1, "fret": 5}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 2, "fret": 5}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 5}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 2, "fret": 5}],
+        [{"string": 2, "fret": 5}]
+      ]
+    },
+    {
+      "id": "happy-birthday",
+      "title": "Joyeux Anniversaire",
+      "artist": "Traditionnel",
+      "difficulty": "easy",
+      "category": "popular",
+      "tempo": 120,
+      "sequence": [
+        [{"string": 4, "fret": 2}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 4, "fret": 4}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 4, "fret": 4}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 4, "fret": 4}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 3, "fret": 4}],
+        [{"string": 3, "fret": 2}]
+      ]
+    },
+    {
+      "id": "fur-elise",
+      "title": "La Lettre a Elise",
+      "artist": "Ludwig van Beethoven",
+      "difficulty": "medium",
+      "category": "classical",
+      "tempo": 80,
+      "sequence": [
+        [{"string": 1, "fret": 0}],
+        [{"string": 1, "fret": 4}],
+        [{"string": 1, "fret": 0}],
+        [{"string": 1, "fret": 4}],
+        [{"string": 1, "fret": 0}],
+        [{"string": 2, "fret": 5}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 3, "fret": 0}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 3, "fret": 2}]
+      ]
+    },
+    {
+      "id": "imagine",
+      "title": "Imagine",
+      "artist": "John Lennon",
+      "difficulty": "medium",
+      "category": "rock",
+      "tempo": 76,
+      "sequence": [
+        [{"string": 3, "fret": 0}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 2, "fret": 0}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 3, "fret": 0}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 3, "fret": 0}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 2, "fret": 0}]
+      ]
+    },
+    {
+      "id": "hedwigs-theme",
+      "title": "Hedwig's Theme",
+      "artist": "John Williams",
+      "difficulty": "medium",
+      "category": "film",
+      "tempo": 90,
+      "sequence": [
+        [{"string": 2, "fret": 1}],
+        [{"string": 1, "fret": 1}],
+        [{"string": 1, "fret": 0}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 1, "fret": 0}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 1, "fret": 1}],
+        [{"string": 1, "fret": 0}],
+        [{"string": 2, "fret": 0}],
+        [{"string": 2, "fret": 3}]
+      ]
+    },
+    {
+      "id": "amazing-grace",
+      "title": "Amazing Grace",
+      "artist": "John Newton",
+      "difficulty": "easy",
+      "category": "classical",
+      "tempo": 70,
+      "sequence": [
+        [{"string": 4, "fret": 0}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 3, "fret": 0}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 0}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 3, "fret": 0}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 4, "fret": 0}]
+      ]
+    },
+    {
+      "id": "canon-in-d",
+      "title": "Canon en Re",
+      "artist": "Johann Pachelbel",
+      "difficulty": "hard",
+      "category": "classical",
+      "tempo": 60,
+      "sequence": [
+        [{"string": 1, "fret": 2}],
+        [{"string": 1, "fret": 0}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 0}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 2, "fret": 3}]
+      ]
+    },
+    {
+      "id": "bella-ciao",
+      "title": "Bella Ciao",
+      "artist": "Traditionnel Italien",
+      "difficulty": "easy",
+      "category": "popular",
+      "tempo": 120,
+      "sequence": [
+        [{"string": 3, "fret": 0}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 2, "fret": 0}],
+        [{"string": 3, "fret": 0}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 2, "fret": 0}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 0}],
+        [{"string": 3, "fret": 2}],
+        [{"string": 3, "fret": 0}]
+      ]
+    },
+    {
+      "id": "comptine-dun-autre-ete",
+      "title": "Comptine d'un autre ete",
+      "artist": "Yann Tiersen",
+      "difficulty": "medium",
+      "category": "film",
+      "tempo": 100,
+      "sequence": [
+        [{"string": 1, "fret": 0}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 1, "fret": 7}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 1, "fret": 0}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 1, "fret": 7}],
+        [{"string": 1, "fret": 3}],
+        [{"string": 2, "fret": 0}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 5}],
+        [{"string": 2, "fret": 3}]
+      ]
+    },
+    {
+      "id": "stairway-intro",
+      "title": "Stairway to Heaven (Intro)",
+      "artist": "Led Zeppelin",
+      "difficulty": "hard",
+      "category": "rock",
+      "tempo": 72,
+      "sequence": [
+        [{"string": 5, "fret": 7}],
+        [{"string": 3, "fret": 5}],
+        [{"string": 2, "fret": 5}],
+        [{"string": 1, "fret": 5}],
+        [{"string": 2, "fret": 5}],
+        [{"string": 3, "fret": 5}],
+        [{"string": 5, "fret": 5}],
+        [{"string": 3, "fret": 5}],
+        [{"string": 2, "fret": 5}],
+        [{"string": 1, "fret": 5}]
+      ]
+    },
+    {
+      "id": "moonlight-sonata",
+      "title": "Sonate au Clair de Lune",
+      "artist": "Ludwig van Beethoven",
+      "difficulty": "hard",
+      "category": "classical",
+      "tempo": 56,
+      "sequence": [
+        [{"string": 6, "fret": 0}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 3, "fret": 1}],
+        [{"string": 6, "fret": 0}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 3, "fret": 1}],
+        [{"string": 6, "fret": 0}],
+        [{"string": 4, "fret": 2}],
+        [{"string": 3, "fret": 1}]
+      ]
+    },
+    {
+      "id": "swan-lake",
+      "title": "Le Lac des Cygnes",
+      "artist": "Pyotr Tchaikovsky",
+      "difficulty": "medium",
+      "category": "classical",
+      "tempo": 68,
+      "sequence": [
+        [{"string": 2, "fret": 1}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 5}],
+        [{"string": 2, "fret": 3}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 3, "fret": 3}],
+        [{"string": 2, "fret": 1}],
+        [{"string": 2, "fret": 0}]
+      ]
+    }
+  ]
+}
