@@ -8,9 +8,11 @@ import { Button } from '@/components/ui/Button';
 import { Fretboard } from '@/components/fretboard/Fretboard';
 import { SequenceProgress } from '@/components/cheatcode/SequenceProgress';
 import { LoopControls } from '@/components/cheatcode/LoopControls';
+import { TempoControls } from '@/components/cheatcode/TempoControls';
 import { useMicrophone } from '@/hooks/useMicrophone';
 import { usePitchDetection } from '@/hooks/usePitchDetection';
 import { useCheatCodeValidation } from '@/hooks/useCheatCodeValidation';
+import { useMetronome } from '@/hooks/useMetronome';
 import { getCheatCodeById } from '@/lib/music/cheatCodes';
 
 export default function PlayCheatCodePage() {
@@ -33,6 +35,23 @@ export default function PlayCheatCodePage() {
       loopStart,
       loopEnd,
     });
+
+  const {
+    isPlaying: metronomeIsPlaying,
+    currentBeat,
+    tempo,
+    start: startMetronome,
+    stop: stopMetronome,
+    setTempo,
+  } = useMetronome(cheatCode?.tempo ?? 80);
+
+  const toggleMetronome = () => {
+    if (metronomeIsPlaying) {
+      stopMetronome();
+    } else {
+      startMetronome();
+    }
+  };
 
   useEffect(() => {
     if (detectedNote && isListening && !isComplete) {
@@ -140,6 +159,13 @@ export default function PlayCheatCodePage() {
                     }}
                     loopCount={loopCount}
                     disabled={!isListening}
+                  />
+                  <TempoControls
+                    tempo={tempo}
+                    onTempoChange={setTempo}
+                    isPlaying={metronomeIsPlaying}
+                    onToggle={toggleMetronome}
+                    currentBeat={currentBeat}
                   />
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
