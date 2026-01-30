@@ -24,7 +24,7 @@ export default function PlayCheatCodePage() {
     minVolume: 0.01,
   });
 
-  const { currentIndex, noteStates, isComplete, reset, validateNote } =
+  const { currentIndex, noteStates, isComplete, isWaitingForNote, reset, validateNote } =
     useCheatCodeValidation(cheatCode);
 
   useEffect(() => {
@@ -130,6 +130,11 @@ export default function PlayCheatCodePage() {
                             'En écoute...'
                           )}
                         </span>
+                        {isWaitingForNote ? (
+                          <span className="text-sm text-amber-400 animate-pulse">En attente de la note...</span>
+                        ) : (
+                          <span className="text-sm text-emerald-400">Note validée!</span>
+                        )}
                       </>
                     )}
                     {error && <span className="text-sm text-red-400">{error}</span>}

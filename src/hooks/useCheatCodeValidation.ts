@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { CheatCode, NoteState, NoteStep, SingleNote } from '@/types/music';
 import { DetectedNote } from '@/types/audio';
 import { getFretFrequency } from '@/lib/music/notes';
@@ -16,6 +16,7 @@ interface UseCheatCodeValidationReturn {
   isComplete: boolean;
   score: number;
   streak: number;
+  isWaitingForNote: boolean;
   validateNote: (detectedNote: DetectedNote | null) => void;
   reset: () => void;
 }
@@ -35,6 +36,8 @@ export function useCheatCodeValidation(
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [lastValidatedTime, setLastValidatedTime] = useState(0);
+  const [isWaitingForNote, setIsWaitingForNote] = useState(true);
+  const waitingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Reset when cheatCode changes
   useEffect(() => {
@@ -43,7 +46,17 @@ export function useCheatCodeValidation(
     setScore(0);
     setStreak(0);
     setLastValidatedTime(0);
+    setIsWaitingForNote(true);
   }, [cheatCode?.id, sequenceLength]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (waitingTimeoutRef.current) {
+        clearTimeout(waitingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const isComplete = useMemo(() => {
     return currentIndex >= sequenceLength && sequenceLength > 0;
@@ -95,17 +108,33 @@ export function useCheatCodeValidation(
         setStreak((prev) => prev + 1);
         setCurrentIndex((prev) => prev + 1);
         setLastValidatedTime(now);
+
+        // Visual feedback for wait mode
+        // Clear any existing timeout
+        if (waitingTimeoutRef.current) {
+          clearTimeout(waitingTimeoutRef.current);
+        }
+        setIsWaitingForNote(false);
+        waitingTimeoutRef.current = setTimeout(() => {
+          setIsWaitingForNote(true);
+          waitingTimeoutRef.current = null;
+        }, 200);
       }
     },
     [cheatCode, currentIndex, isComplete, checkNoteMatch, streak, lastValidatedTime]
   );
 
   const reset = useCallback(() => {
+    if (waitingTimeoutRef.current) {
+      clearTimeout(waitingTimeoutRef.current);
+      waitingTimeoutRef.current = null;
+    }
     setCurrentIndex(0);
     setNoteStates(Array(sequenceLength).fill('waiting'));
     setScore(0);
     setStreak(0);
     setLastValidatedTime(0);
+    setIsWaitingForNote(true);
   }, [sequenceLength]);
 
   return {
@@ -114,6 +143,7 @@ export function useCheatCodeValidation(
     isComplete,
     score,
     streak,
+    isWaitingForNote,
     validateNote,
     reset,
   };
