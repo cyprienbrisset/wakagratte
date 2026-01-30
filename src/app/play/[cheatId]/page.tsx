@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useEffect, useMemo, useState, useRef } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
@@ -9,14 +9,18 @@ import { Fretboard } from '@/components/fretboard/Fretboard';
 import { SequenceProgress } from '@/components/cheatcode/SequenceProgress';
 import { LoopControls } from '@/components/cheatcode/LoopControls';
 import { TempoControls } from '@/components/cheatcode/TempoControls';
+import { ScoreDisplay } from '@/components/stats/ScoreDisplay';
+import { SessionSummary } from '@/components/stats/SessionSummary';
 import { useMicrophone } from '@/hooks/useMicrophone';
 import { usePitchDetection } from '@/hooks/usePitchDetection';
 import { useCheatCodeValidation } from '@/hooks/useCheatCodeValidation';
 import { useMetronome } from '@/hooks/useMetronome';
+import { useStats } from '@/hooks/useStats';
 import { getCheatCodeById } from '@/lib/music/cheatCodes';
 
 export default function PlayCheatCodePage() {
   const params = useParams();
+  const router = useRouter();
   const cheatId = params.cheatId as string;
 
   const cheatCode = useMemo(() => getCheatCodeById(cheatId) ?? null, [cheatId]);
@@ -24,13 +28,21 @@ export default function PlayCheatCodePage() {
   const [loopStart, setLoopStart] = useState<number | null>(null);
   const [loopEnd, setLoopEnd] = useState<number | null>(null);
 
+  // Stats tracking
+  const { saveSession, getCodeStats } = useStats();
+  const [sessionStartTime, setSessionStartTime] = useState<number | null>(null);
+  const [sessionSaved, setSessionSaved] = useState(false);
+  const completionTimeRef = useRef<number>(0);
+  const saveSessionRef = useRef(saveSession);
+  saveSessionRef.current = saveSession;
+
   const { status: micStatus, stream, error, requestAccess, stopMicrophone } = useMicrophone();
   const { detectedNote, isListening } = usePitchDetection(stream, {
     minClarity: 0.85,
     minVolume: 0.01,
   });
 
-  const { currentIndex, noteStates, isComplete, isWaitingForNote, loopCount, reset, validateNote } =
+  const { currentIndex, noteStates, isComplete, isWaitingForNote, loopCount, score, streak, reset, validateNote } =
     useCheatCodeValidation(cheatCode, {
       loopStart,
       loopEnd,
@@ -58,6 +70,41 @@ export default function PlayCheatCodePage() {
       validateNote(detectedNote);
     }
   }, [detectedNote, isListening, isComplete, validateNote]);
+
+  // Capture completion time when sequence completes
+  useEffect(() => {
+    if (isComplete && sessionStartTime) {
+      completionTimeRef.current = Date.now() - sessionStartTime;
+    }
+  }, [isComplete, sessionStartTime]);
+
+  // Save session when complete
+  useEffect(() => {
+    if (isComplete && !sessionSaved && sessionStartTime && cheatCode) {
+      saveSessionRef.current({
+        cheatCodeId: cheatCode.id,
+        timestamp: Date.now(),
+        score,
+        accuracy: 100, // On ne compte que les succes
+        completionTime: completionTimeRef.current,
+        notesPlayed: cheatCode.sequence.length,
+        notesCorrect: cheatCode.sequence.length,
+      });
+      setSessionSaved(true);
+    }
+  }, [isComplete, sessionSaved, sessionStartTime, cheatCode, score]);
+
+  const handleStart = () => {
+    requestAccess();
+    setSessionStartTime(Date.now());
+    setSessionSaved(false);
+  };
+
+  const handleReplay = () => {
+    reset();
+    setSessionSaved(false);
+    setSessionStartTime(Date.now());
+  };
 
   if (!cheatCode) {
     return (
@@ -122,26 +169,14 @@ export default function PlayCheatCodePage() {
         <div className="bg-[#0d111c] py-6">
           <div className="max-w-3xl mx-auto px-6">
             {isComplete ? (
-              <div className="bg-[#151a28] rounded-2xl p-6 border border-amber-500/20">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <p className="text-amber-500 font-medium">Séquence terminée !</p>
-                  </div>
-                  <div className="flex gap-3">
-                    <Button onClick={reset} variant="secondary" size="sm">
-                      Recommencer
-                    </Button>
-                    <Link href="/play">
-                      <Button size="sm">Suivant</Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              <SessionSummary
+                score={score}
+                totalNotes={cheatCode.sequence.length}
+                completionTime={completionTimeRef.current}
+                previousBest={getCodeStats(cheatCode.id)}
+                onReplay={handleReplay}
+                onNext={() => router.push('/play')}
+              />
             ) : (
               <div className="bg-[#151a28] rounded-2xl p-6 border border-white/5">
                 <div className="flex flex-col gap-4">
@@ -167,6 +202,17 @@ export default function PlayCheatCodePage() {
                     onToggle={toggleMetronome}
                     currentBeat={currentBeat}
                   />
+                  {/* Score display when playing */}
+                  {isListening && (
+                    <div className="pb-4 border-b border-white/5 mb-4">
+                      <ScoreDisplay
+                        score={score}
+                        streak={streak}
+                        currentIndex={currentIndex}
+                        totalNotes={cheatCode.sequence.length}
+                      />
+                    </div>
+                  )}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       {isListening && (
@@ -196,7 +242,7 @@ export default function PlayCheatCodePage() {
                         </Button>
                       )}
                       {!isListening ? (
-                        <Button onClick={requestAccess} disabled={micStatus === 'requesting'} size="sm">
+                        <Button onClick={handleStart} disabled={micStatus === 'requesting'} size="sm">
                           {micStatus === 'requesting' ? 'Autorisation...' : 'Demarrer'}
                         </Button>
                       ) : (
