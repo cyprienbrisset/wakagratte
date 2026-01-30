@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
-import { Fretboard } from '@/components/fretboard/Fretboard';
 import { ScrollingTablature } from '@/components/tablature/ScrollingTablature';
 import { LoopControls } from '@/components/cheatcode/LoopControls';
 import { TempoControls } from '@/components/cheatcode/TempoControls';
@@ -119,8 +118,6 @@ export default function PlayCheatCodePage() {
     );
   }
 
-  const maxFret = Math.max(...cheatCode.sequence.flatMap((step) => step.map((note) => note.fret)), 5);
-
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -142,25 +139,13 @@ export default function PlayCheatCodePage() {
       {/* Main content */}
       <div className="flex-1 flex flex-col">
         {/* Scrolling Tablature */}
-        <div className="py-8 bg-[#0d111c]">
-          <div className="max-w-4xl mx-auto px-6">
+        <div className="flex-1 flex items-center py-8 bg-[#0d111c]">
+          <div className="max-w-5xl mx-auto px-6 w-full">
             <ScrollingTablature
               sequence={cheatCode.sequence}
               currentIndex={currentIndex}
               noteStates={noteStates}
               visibleNotes={12}
-            />
-          </div>
-        </div>
-
-        {/* Fretboard */}
-        <div className="flex-1 flex items-center py-8">
-          <div className="max-w-4xl mx-auto px-6 w-full">
-            <Fretboard
-              sequence={cheatCode.sequence}
-              currentIndex={currentIndex}
-              noteStates={noteStates}
-              maxFret={maxFret + 2}
             />
           </div>
         </div>
