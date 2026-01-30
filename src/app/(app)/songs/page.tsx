@@ -9,9 +9,29 @@ import { useRef } from 'react';
 const CATEGORY_GRADIENTS: Record<SongCategory, string> = {
   classical: 'from-indigo-500 to-purple-700',
   rock: 'from-red-500 to-orange-600',
-  popular: 'from-pink-500 to-rose-600',
+  pop: 'from-pink-500 to-rose-600',
   film: 'from-amber-500 to-yellow-600',
+  metal: 'from-gray-700 to-gray-900',
+  blues: 'from-blue-600 to-blue-800',
+  french: 'from-blue-500 to-red-500',
+  folk: 'from-green-600 to-emerald-700',
+  videogame: 'from-purple-500 to-pink-600',
+  latin: 'from-orange-500 to-red-600',
   jazz: 'from-teal-500 to-cyan-600',
+};
+
+const CATEGORY_LABELS: Record<SongCategory, string> = {
+  classical: 'Classique',
+  rock: 'Rock',
+  pop: 'Pop & Hits',
+  film: 'Musiques de film',
+  metal: 'Metal & Hard Rock',
+  blues: 'Blues & Soul',
+  french: 'Chansons francaises',
+  folk: 'Folk & Traditionnel',
+  videogame: 'Jeux video',
+  latin: 'Musique latine',
+  jazz: 'Jazz',
 };
 
 const DIFFICULTY_DOTS: Record<Difficulty, { count: number; colors: string }> = {
@@ -82,7 +102,7 @@ function SongRow({ title, songs, showAll }: SongRowProps) {
               className="flex-shrink-0 w-44 group/card"
             >
               {/* Thumbnail */}
-              <div className={`w-44 h-44 rounded-xl bg-gradient-to-br ${CATEGORY_GRADIENTS[song.category]} relative overflow-hidden mb-3`}>
+              <div className={`w-44 h-44 rounded-xl bg-gradient-to-br ${CATEGORY_GRADIENTS[song.category] || 'from-gray-600 to-gray-800'} relative overflow-hidden mb-3`}>
                 {/* Decorative music icon */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-20">
                   <svg className="w-20 h-20 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -130,26 +150,40 @@ export default function SongsPage() {
   const allSongs = getAllSongs();
 
   // Group by category
-  const classical = allSongs.filter(s => s.category === 'classical');
-  const film = allSongs.filter(s => s.category === 'film');
-  const rock = allSongs.filter(s => s.category === 'rock');
-  const popular = allSongs.filter(s => s.category === 'popular');
   const easy = allSongs.filter(s => s.difficulty === 'easy');
+  const classical = allSongs.filter(s => s.category === 'classical');
+  const rock = allSongs.filter(s => s.category === 'rock');
+  const pop = allSongs.filter(s => s.category === 'pop');
+  const film = allSongs.filter(s => s.category === 'film');
+  const metal = allSongs.filter(s => s.category === 'metal');
+  const blues = allSongs.filter(s => s.category === 'blues');
+  const french = allSongs.filter(s => s.category === 'french');
+  const folk = allSongs.filter(s => s.category === 'folk');
+  const videogame = allSongs.filter(s => s.category === 'videogame');
+  const latin = allSongs.filter(s => s.category === 'latin');
+  const jazz = allSongs.filter(s => s.category === 'jazz');
 
   return (
     <div className="min-h-screen p-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Morceaux</h1>
-        <p className="text-gray-400">Apprends tes morceaux preferes a la guitare</p>
+        <p className="text-gray-400">{allSongs.length} morceaux disponibles</p>
       </div>
 
       {/* Song rows by category */}
       <SongRow title="Chansons faciles" songs={easy} showAll />
       <SongRow title="Classique" songs={classical} showAll />
-      <SongRow title="Musiques de film" songs={film} showAll />
       <SongRow title="Rock" songs={rock} showAll />
-      <SongRow title="Populaire" songs={popular} showAll />
+      <SongRow title="Pop & Hits modernes" songs={pop} showAll />
+      <SongRow title="Musiques de film" songs={film} showAll />
+      <SongRow title="Metal & Hard Rock" songs={metal} showAll />
+      <SongRow title="Blues & Soul" songs={blues} showAll />
+      <SongRow title="Chansons francaises" songs={french} showAll />
+      <SongRow title="Folk & Traditionnel" songs={folk} showAll />
+      <SongRow title="Jeux video" songs={videogame} showAll />
+      <SongRow title="Musique latine" songs={latin} showAll />
+      <SongRow title="Jazz" songs={jazz} showAll />
     </div>
   );
 }
