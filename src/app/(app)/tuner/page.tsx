@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { TunerDial } from '@/components/tuner/TunerDial';
 import { TuningSelector } from '@/components/tuner/TuningSelector';
@@ -57,7 +55,7 @@ export default function TunerPage() {
 
     const targetNote = getStringNote(selectedTuning, result.stringNum);
     const parsedNote = parseNoteString(targetNote);
-    const displayNote = parsedNote?.note.replace('#', '♯') || targetNote;
+    const displayNote = parsedNote?.note.replace('#', '\u266F') || targetNote;
 
     let status: TunerStatus = 'in_tune';
     if (result.centsOff < -IN_TUNE_THRESHOLD) {
@@ -90,73 +88,56 @@ export default function TunerPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0b0f19]">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0b0f19]/80 backdrop-blur-lg border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/">
-            <Image src="/logo.svg" alt="Wakagratte" width={128} height={128} />
-          </Link>
-          <div className="flex items-center gap-6">
-            <span className="text-sm text-amber-500 font-medium">Accordeur</span>
-            <Link href="/play">
-              <Button size="sm">Jouer</Button>
-            </Link>
-          </div>
+    <div className="min-h-screen p-8">
+      <div className="max-w-lg mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-bold text-white mb-3">Accordeur</h1>
+          <p className="text-gray-400">Accorde ta guitare avec precision</p>
         </div>
-      </nav>
 
-      <div className="pt-24 pb-12 px-6">
-        <div className="max-w-lg mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold text-white mb-3">Accordeur</h1>
-            <p className="text-gray-400">Accorde ta guitare avec précision</p>
-          </div>
+        {/* Tuning selector */}
+        <div className="bg-[#151a28] rounded-2xl p-6 border border-white/5 mb-6">
+          <h2 className="text-sm font-medium text-gray-400 mb-4">Accordage</h2>
+          <TuningSelector selectedTuning={selectedTuning} onSelect={handleTuningChange} />
+        </div>
 
-          {/* Tuning selector */}
-          <div className="bg-[#151a28] rounded-2xl p-6 border border-white/5 mb-6">
-            <h2 className="text-sm font-medium text-gray-400 mb-4">Accordage</h2>
-            <TuningSelector selectedTuning={selectedTuning} onSelect={handleTuningChange} />
-          </div>
-
-          {/* Tuner */}
-          <div className="bg-[#151a28] rounded-2xl p-8 border border-white/5 mb-6">
-            {!isListening ? (
-              <div className="text-center py-8">
-                <p className="text-gray-400 mb-6">Active le micro pour commencer</p>
-                <Button onClick={requestAccess} disabled={micStatus === 'requesting'} size="lg">
-                  {micStatus === 'requesting' ? 'Autorisation...' : 'Activer le micro'}
+        {/* Tuner */}
+        <div className="bg-[#151a28] rounded-2xl p-8 border border-white/5 mb-6">
+          {!isListening ? (
+            <div className="text-center py-8">
+              <p className="text-gray-400 mb-6">Active le micro pour commencer</p>
+              <Button onClick={requestAccess} disabled={micStatus === 'requesting'} size="lg">
+                {micStatus === 'requesting' ? 'Autorisation...' : 'Activer le micro'}
+              </Button>
+              {error && <p className="text-red-400 text-sm mt-4">{error}</p>}
+            </div>
+          ) : (
+            <>
+              <TunerDial
+                centsOff={tunerState.centsOff}
+                status={tunerState.status}
+                note={tunerState.note}
+              />
+              <div className="mt-8 text-center">
+                <Button onClick={stopMicrophone} variant="ghost" size="sm">
+                  Desactiver le micro
                 </Button>
-                {error && <p className="text-red-400 text-sm mt-4">{error}</p>}
               </div>
-            ) : (
-              <>
-                <TunerDial
-                  centsOff={tunerState.centsOff}
-                  status={tunerState.status}
-                  note={tunerState.note}
-                />
-                <div className="mt-8 text-center">
-                  <Button onClick={stopMicrophone} variant="ghost" size="sm">
-                    Désactiver le micro
-                  </Button>
-                </div>
-              </>
-            )}
-          </div>
+            </>
+          )}
+        </div>
 
-          {/* Guitar visualizer */}
-          <div className="bg-[#151a28] rounded-2xl p-6 border border-white/5">
-            <h2 className="text-sm font-medium text-gray-400 mb-4">Visualisation</h2>
-            <GuitarVisualizer
-              tuning={selectedTuning}
-              activeString={tunerState.activeString}
-              tunedStrings={tunedStrings}
-            />
-          </div>
+        {/* Guitar visualizer */}
+        <div className="bg-[#151a28] rounded-2xl p-6 border border-white/5">
+          <h2 className="text-sm font-medium text-gray-400 mb-4">Visualisation</h2>
+          <GuitarVisualizer
+            tuning={selectedTuning}
+            activeString={tunerState.activeString}
+            tunedStrings={tunedStrings}
+          />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Fretboard } from '@/components/fretboard/Fretboard';
 import { SequenceProgress } from '@/components/cheatcode/SequenceProgress';
@@ -108,43 +107,43 @@ export default function PlayCheatCodePage() {
 
   if (!cheatCode) {
     return (
-      <main className="min-h-screen bg-[#0b0f19] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-400 mb-4">Séquence non trouvée</p>
+          <p className="text-gray-400 mb-4">Sequence non trouvee</p>
           <Link href="/play">
             <Button variant="secondary">Retour</Button>
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
   const maxFret = Math.max(...cheatCode.sequence.flatMap((step) => step.map((note) => note.fret)), 5);
 
   return (
-    <main className="min-h-screen bg-[#0b0f19] flex flex-col">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0b0f19]/80 backdrop-blur-lg border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <div className="bg-[#0d111c] border-b border-white/5 px-6 py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link href="/play" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <Image src="/logo.svg" alt="Wakagratte" width={96} height={96} />
+            <span>Retour</span>
           </Link>
           <span className="text-sm font-semibold text-white">{cheatCode.name}</span>
           <span className="text-sm text-amber-500 font-medium tabular-nums">
             {currentIndex}/{cheatCode.sequence.length}
           </span>
         </div>
-      </nav>
+      </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col pt-20">
+      <div className="flex-1 flex flex-col">
         {/* Sequence */}
         <div className="py-8 bg-[#0d111c]">
           <div className="max-w-3xl mx-auto px-6">
-            <h2 className="text-sm font-medium text-gray-400 mb-4 text-center">Séquence</h2>
+            <h2 className="text-sm font-medium text-gray-400 mb-4 text-center">Sequence</h2>
             <SequenceProgress
               sequence={cheatCode.sequence}
               currentIndex={currentIndex}
@@ -185,7 +184,7 @@ export default function PlayCheatCodePage() {
                     loopStart={loopStart}
                     loopEnd={loopEnd}
                     onLoopChange={(start, end) => {
-                      // Si les deux sont définis et start > end, ne pas accepter
+                      // Si les deux sont definis et start > end, ne pas accepter
                       if (start !== null && end !== null && start > end) {
                         return;
                       }
@@ -258,6 +257,6 @@ export default function PlayCheatCodePage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
