@@ -1,25 +1,76 @@
 'use client';
 
+import { useState } from 'react';
+
 export default function SettingsPage() {
+  const [sensitivity, setSensitivity] = useState(85);
+
+  const handleClearStats = () => {
+    if (confirm('Es-tu sur de vouloir effacer toutes tes statistiques ?')) {
+      localStorage.removeItem('wakagratte_stats');
+      window.location.reload();
+    }
+  };
+
   return (
     <div className="min-h-screen p-8">
-      <div className="max-w-lg mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Reglages</h1>
-          <p className="text-gray-400">Configure ton experience Wakagratte</p>
-        </div>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-white mb-2">Reglages</h1>
+        <p className="text-gray-400">Configure l&apos;application</p>
+      </div>
 
-        {/* Placeholder content */}
-        <div className="bg-[#151a28] rounded-2xl p-8 border border-white/5 text-center">
-          <div className="text-gray-400">
-            <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <p className="text-lg font-medium mb-2">Bientot disponible</p>
-            <p className="text-sm">Les reglages seront disponibles prochainement.</p>
+      {/* Audio */}
+      <div className="bg-[#151a28] rounded-2xl p-6 border border-white/5 mb-6">
+        <h2 className="text-lg font-semibold text-white mb-4">Audio</h2>
+
+        <div className="space-y-6">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-gray-300">Sensibilite du micro</label>
+              <span className="text-amber-500 font-mono">{sensitivity}%</span>
+            </div>
+            <input
+              type="range"
+              min={50}
+              max={100}
+              value={sensitivity}
+              onChange={(e) => setSensitivity(parseInt(e.target.value))}
+              className="w-full accent-amber-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Augmente si les notes ne sont pas detectees, diminue s&apos;il y a trop de faux positifs
+            </p>
           </div>
+        </div>
+      </div>
+
+      {/* Données */}
+      <div className="bg-[#151a28] rounded-2xl p-6 border border-white/5 mb-6">
+        <h2 className="text-lg font-semibold text-white mb-4">Donnees</h2>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-gray-300">Effacer les statistiques</div>
+              <div className="text-xs text-gray-500">Supprime toutes tes donnees de progression</div>
+            </div>
+            <button
+              onClick={handleClearStats}
+              className="px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
+            >
+              Effacer
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* À propos */}
+      <div className="bg-[#151a28] rounded-2xl p-6 border border-white/5">
+        <h2 className="text-lg font-semibold text-white mb-4">A propos</h2>
+        <div className="space-y-2 text-gray-400 text-sm">
+          <p><span className="text-gray-500">Version:</span> 1.0.0</p>
+          <p><span className="text-gray-500">Developpe par:</span> Wakagratte Team</p>
         </div>
       </div>
     </div>
