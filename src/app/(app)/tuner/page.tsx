@@ -118,10 +118,12 @@ export default function TunerPage() {
                 centsOff={tunerState.centsOff}
                 status={tunerState.status}
                 note={tunerState.note}
+                frequency={detectedNote?.frequency}
+                activeString={tunerState.activeString}
               />
               <div className="mt-8 text-center">
                 <Button onClick={stopMicrophone} variant="ghost" size="sm">
-                  Desactiver le micro
+                  Désactiver le micro
                 </Button>
               </div>
             </>
