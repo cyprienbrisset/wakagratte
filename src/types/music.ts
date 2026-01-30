@@ -10,6 +10,8 @@ export type NoteStep = SingleNote[];
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
+export type CheatCodeCategory = 'basics' | 'riffs' | 'chords' | 'scales';
+
 export interface CheatCode {
   id: string;
   name: string;
@@ -17,6 +19,8 @@ export interface CheatCode {
   tempo: number;
   sequence: NoteStep[];
   description?: string;
+  category?: CheatCodeCategory;
+  tags?: string[];
 }
 
 export type NoteState = 'waiting' | 'active' | 'success' | 'error';

@@ -3,6 +3,7 @@
     {
       "id": "waka-001",
       "name": "Wakagratte - Base",
+      "category": "basics",
       "difficulty": "easy",
       "tempo": 80,
       "description": "Le cheat code original. 3 double stops.",
@@ -15,6 +16,7 @@
     {
       "id": "waka-002",
       "name": "Wakagratte - Double",
+      "category": "basics",
       "difficulty": "easy",
       "tempo": 90,
       "description": "Le pattern de base répété deux fois.",
@@ -30,6 +32,7 @@
     {
       "id": "waka-003",
       "name": "Wakagratte - Groove",
+      "category": "basics",
       "difficulty": "medium",
       "tempo": 100,
       "description": "Le pattern avec des notes de remplissage entre les double stops.",
@@ -45,6 +48,7 @@
     {
       "id": "waka-004",
       "name": "Wakagratte - Shuffle",
+      "category": "basics",
       "difficulty": "medium",
       "tempo": 95,
       "description": "Le pattern avec un rythme shuffle et des basses alternées.",
@@ -60,6 +64,7 @@
     {
       "id": "waka-005",
       "name": "Wakagratte - Ascending",
+      "category": "basics",
       "difficulty": "medium",
       "tempo": 90,
       "description": "Le pattern avec une montée mélodique à la fin.",
@@ -74,6 +79,7 @@
     {
       "id": "waka-006",
       "name": "Wakagratte - Full",
+      "category": "basics",
       "difficulty": "hard",
       "tempo": 110,
       "description": "Le pattern complet avec remplissage et variations.",
@@ -88,6 +94,175 @@
         [{ "string": 6, "fret": 0 }],
         [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }],
         [{ "string": 3, "fret": 4 }, { "string": 2, "fret": 3 }]
+      ]
+    },
+    {
+      "id": "chord-em",
+      "name": "Accord Em",
+      "category": "chords",
+      "difficulty": "easy",
+      "tempo": 60,
+      "description": "Accord de Mi mineur - le plus facile",
+      "sequence": [
+        [{ "string": 5, "fret": 2 }, { "string": 4, "fret": 2 }]
+      ]
+    },
+    {
+      "id": "chord-am",
+      "name": "Accord Am",
+      "category": "chords",
+      "difficulty": "easy",
+      "tempo": 60,
+      "description": "Accord de La mineur",
+      "sequence": [
+        [{ "string": 4, "fret": 2 }, { "string": 3, "fret": 2 }, { "string": 2, "fret": 1 }]
+      ]
+    },
+    {
+      "id": "chord-c",
+      "name": "Accord C",
+      "category": "chords",
+      "difficulty": "easy",
+      "tempo": 60,
+      "description": "Accord de Do majeur",
+      "sequence": [
+        [{ "string": 5, "fret": 3 }, { "string": 4, "fret": 2 }, { "string": 2, "fret": 1 }]
+      ]
+    },
+    {
+      "id": "chord-g",
+      "name": "Accord G",
+      "category": "chords",
+      "difficulty": "easy",
+      "tempo": 60,
+      "description": "Accord de Sol majeur",
+      "sequence": [
+        [{ "string": 6, "fret": 3 }, { "string": 5, "fret": 2 }, { "string": 1, "fret": 3 }]
+      ]
+    },
+    {
+      "id": "chord-d",
+      "name": "Accord D",
+      "category": "chords",
+      "difficulty": "easy",
+      "tempo": 60,
+      "description": "Accord de Ré majeur",
+      "sequence": [
+        [{ "string": 3, "fret": 2 }, { "string": 2, "fret": 3 }, { "string": 1, "fret": 2 }]
+      ]
+    },
+    {
+      "id": "riff-smoke",
+      "name": "Smoke on the Water",
+      "category": "riffs",
+      "difficulty": "easy",
+      "tempo": 112,
+      "description": "Le riff le plus célèbre du rock - Deep Purple",
+      "tags": ["rock", "classic"],
+      "sequence": [
+        [{ "string": 4, "fret": 0 }, { "string": 3, "fret": 0 }],
+        [{ "string": 4, "fret": 3 }, { "string": 3, "fret": 3 }],
+        [{ "string": 4, "fret": 5 }, { "string": 3, "fret": 5 }],
+        [{ "string": 4, "fret": 0 }, { "string": 3, "fret": 0 }],
+        [{ "string": 4, "fret": 3 }, { "string": 3, "fret": 3 }],
+        [{ "string": 4, "fret": 6 }, { "string": 3, "fret": 6 }],
+        [{ "string": 4, "fret": 5 }, { "string": 3, "fret": 5 }]
+      ]
+    },
+    {
+      "id": "riff-seven-nation",
+      "name": "Seven Nation Army",
+      "category": "riffs",
+      "difficulty": "easy",
+      "tempo": 124,
+      "description": "The White Stripes - riff à une note",
+      "tags": ["rock", "modern"],
+      "sequence": [
+        [{ "string": 5, "fret": 7 }],
+        [{ "string": 5, "fret": 7 }],
+        [{ "string": 5, "fret": 10 }],
+        [{ "string": 5, "fret": 7 }],
+        [{ "string": 5, "fret": 5 }],
+        [{ "string": 5, "fret": 3 }],
+        [{ "string": 5, "fret": 2 }]
+      ]
+    },
+    {
+      "id": "riff-iron-man",
+      "name": "Iron Man",
+      "category": "riffs",
+      "difficulty": "medium",
+      "tempo": 76,
+      "description": "Black Sabbath - power chords lourds",
+      "tags": ["metal", "classic"],
+      "sequence": [
+        [{ "string": 6, "fret": 2 }, { "string": 5, "fret": 4 }],
+        [{ "string": 6, "fret": 5 }, { "string": 5, "fret": 7 }],
+        [{ "string": 6, "fret": 5 }, { "string": 5, "fret": 7 }],
+        [{ "string": 6, "fret": 7 }, { "string": 5, "fret": 9 }],
+        [{ "string": 6, "fret": 10 }, { "string": 5, "fret": 12 }],
+        [{ "string": 6, "fret": 9 }, { "string": 5, "fret": 11 }],
+        [{ "string": 6, "fret": 10 }, { "string": 5, "fret": 12 }]
+      ]
+    },
+    {
+      "id": "riff-sunshine",
+      "name": "Sunshine of Your Love",
+      "category": "riffs",
+      "difficulty": "medium",
+      "tempo": 116,
+      "description": "Cream - riff blues-rock iconique",
+      "tags": ["blues", "rock"],
+      "sequence": [
+        [{ "string": 4, "fret": 0 }],
+        [{ "string": 4, "fret": 3 }],
+        [{ "string": 4, "fret": 5 }],
+        [{ "string": 5, "fret": 3 }],
+        [{ "string": 4, "fret": 0 }],
+        [{ "string": 4, "fret": 3 }],
+        [{ "string": 5, "fret": 5 }],
+        [{ "string": 5, "fret": 3 }]
+      ]
+    },
+    {
+      "id": "scale-penta-em",
+      "name": "Pentatonique Em (pos 1)",
+      "category": "scales",
+      "difficulty": "medium",
+      "tempo": 80,
+      "description": "La gamme la plus utilisée en rock/blues",
+      "tags": ["blues", "rock"],
+      "sequence": [
+        [{ "string": 6, "fret": 0 }],
+        [{ "string": 6, "fret": 3 }],
+        [{ "string": 5, "fret": 0 }],
+        [{ "string": 5, "fret": 2 }],
+        [{ "string": 4, "fret": 0 }],
+        [{ "string": 4, "fret": 2 }],
+        [{ "string": 3, "fret": 0 }],
+        [{ "string": 3, "fret": 2 }],
+        [{ "string": 2, "fret": 0 }],
+        [{ "string": 2, "fret": 3 }],
+        [{ "string": 1, "fret": 0 }],
+        [{ "string": 1, "fret": 3 }]
+      ]
+    },
+    {
+      "id": "scale-chromatic",
+      "name": "Exercice chromatique",
+      "category": "scales",
+      "difficulty": "easy",
+      "tempo": 60,
+      "description": "Exercice de base 1-2-3-4 sur corde grave",
+      "sequence": [
+        [{ "string": 6, "fret": 1 }],
+        [{ "string": 6, "fret": 2 }],
+        [{ "string": 6, "fret": 3 }],
+        [{ "string": 6, "fret": 4 }],
+        [{ "string": 5, "fret": 1 }],
+        [{ "string": 5, "fret": 2 }],
+        [{ "string": 5, "fret": 3 }],
+        [{ "string": 5, "fret": 4 }]
       ]
     }
   ]

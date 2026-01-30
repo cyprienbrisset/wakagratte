@@ -2,12 +2,27 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui/Button';
 import { CheatCodeCard } from '@/components/cheatcode/CheatCodeCard';
 import { getAllCheatCodes } from '@/lib/music/cheatCodes';
+import { CheatCodeCategory } from '@/types/music';
+
+const CATEGORY_LABELS: Record<CheatCodeCategory, string> = {
+  basics: 'Bases Wakagratte',
+  chords: 'Accords',
+  riffs: 'Riffs celebres',
+  scales: 'Gammes & Exercices',
+};
+
+const CATEGORY_ORDER: CheatCodeCategory[] = ['basics', 'chords', 'riffs', 'scales'];
 
 export default function PlayPage() {
   const cheatCodes = getAllCheatCodes();
+
+  // Grouper par categorie
+  const grouped = CATEGORY_ORDER.reduce((acc, category) => {
+    acc[category] = cheatCodes.filter(cc => (cc.category ?? 'basics') === category);
+    return acc;
+  }, {} as Record<CheatCodeCategory, typeof cheatCodes>);
 
   return (
     <main className="min-h-screen bg-[#0b0f19]">
@@ -21,7 +36,7 @@ export default function PlayPage() {
             <Link href="/tuner" className="text-sm text-gray-400 hover:text-white transition-colors">
               Accordeur
             </Link>
-            <span className="text-sm text-amber-500 font-medium">Séquences</span>
+            <span className="text-sm text-amber-500 font-medium">Sequences</span>
           </div>
         </div>
       </nav>
@@ -30,15 +45,29 @@ export default function PlayPage() {
         <div className="max-w-lg mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold text-white mb-3">Séquences</h1>
-            <p className="text-gray-400">Choisis une séquence et joue-la avec ta guitare</p>
+            <h1 className="text-3xl font-bold text-white mb-3">Sequences</h1>
+            <p className="text-gray-400">Choisis une sequence et joue-la avec ta guitare</p>
           </div>
 
-          {/* Cheat codes list */}
-          <div className="space-y-4">
-            {cheatCodes.map((cheatCode) => (
-              <CheatCodeCard key={cheatCode.id} cheatCode={cheatCode} />
-            ))}
+          {/* Cheat codes grouped by category */}
+          <div className="space-y-8">
+            {CATEGORY_ORDER.map((category) => {
+              const codes = grouped[category];
+              if (codes.length === 0) return null;
+
+              return (
+                <div key={category}>
+                  <h2 className="text-lg font-semibold text-white mb-4">
+                    {CATEGORY_LABELS[category]}
+                  </h2>
+                  <div className="space-y-4">
+                    {codes.map((cheatCode) => (
+                      <CheatCodeCard key={cheatCode.id} cheatCode={cheatCode} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
