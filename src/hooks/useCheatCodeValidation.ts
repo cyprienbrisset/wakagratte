@@ -10,6 +10,7 @@ interface UseCheatCodeValidationOptions {
   timingTolerance?: number; // ms
   loopStart?: number | null;  // index de début (inclus), null = pas de loop
   loopEnd?: number | null;    // index de fin (inclus)
+  isOnset?: boolean;  // true si une nouvelle attaque est détectée
 }
 
 interface UseCheatCodeValidationReturn {
@@ -28,7 +29,7 @@ export function useCheatCodeValidation(
   cheatCode: CheatCode | null,
   options: UseCheatCodeValidationOptions = {}
 ): UseCheatCodeValidationReturn {
-  const { pitchTolerance = 40, loopStart = null, loopEnd = null } = options; // 40 cents = moins d'un demi-ton
+  const { pitchTolerance = 40, loopStart = null, loopEnd = null, isOnset = false } = options; // 40 cents = moins d'un demi-ton
 
   const sequenceLength = cheatCode?.sequence.length || 0;
 
@@ -42,6 +43,9 @@ export function useCheatCodeValidation(
   const [isWaitingForNote, setIsWaitingForNote] = useState(true);
   const [loopCount, setLoopCount] = useState(0);
   const waitingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastValidatedNoteRef = useRef<{ string: number; fret: number } | null>(null);
+  const needsNewOnsetRef = useRef<boolean>(false);
+  const lastOnsetRef = useRef<boolean>(false);
 
   // Reset when cheatCode changes
   useEffect(() => {
@@ -86,21 +90,72 @@ export function useCheatCodeValidation(
     [pitchTolerance]
   );
 
+  // Détecte si la note courante est identique à la précédente
+  const isRepeatedNote = useCallback(
+    (currentStep: NoteStep): boolean => {
+      if (!lastValidatedNoteRef.current || currentIndex === 0) return false;
+
+      // Vérifie si une des notes du step correspond à la dernière note validée
+      return currentStep.some(
+        (note) =>
+          note.string === lastValidatedNoteRef.current!.string &&
+          note.fret === lastValidatedNoteRef.current!.fret
+      );
+    },
+    [currentIndex]
+  );
+
   const validateNote = useCallback(
     (detectedNote: DetectedNote | null) => {
       if (!cheatCode || isComplete || !detectedNote) return;
 
       const now = Date.now();
-      // Prevent rapid-fire validations (debounce) - reduced to 100ms
-      if (now - lastValidatedTime < 100) return;
 
       const currentStep = cheatCode.sequence[currentIndex];
       if (!currentStep || currentStep.length === 0) return;
 
       const { isMatch, matchedNote } = checkNoteMatch(detectedNote, currentStep);
 
+      // Vérifie si c'est une note répétée
+      const isRepeat = isRepeatedNote(currentStep);
+
+      // Pour les notes répétées, on doit détecter une nouvelle attaque
+      if (isRepeat && needsNewOnsetRef.current) {
+        // Détection de front montant sur isOnset
+        const onsetRising = isOnset && !lastOnsetRef.current;
+        lastOnsetRef.current = isOnset;
+
+        if (!onsetRising) {
+          // Pas encore de nouvelle attaque détectée
+          return;
+        }
+        // Nouvelle attaque détectée, on peut continuer
+        needsNewOnsetRef.current = false;
+      }
+
+      lastOnsetRef.current = isOnset;
+
+      // Prevent rapid-fire validations (debounce) - reduced to 80ms
+      if (now - lastValidatedTime < 80) return;
+
       if (isMatch && matchedNote) {
         // Success!
+        // Mémorise la note validée pour la détection des répétitions
+        lastValidatedNoteRef.current = { string: matchedNote.string, fret: matchedNote.fret };
+
+        // Vérifie si la prochaine note est identique (pour demander une nouvelle attaque)
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < cheatCode.sequence.length) {
+          const nextStep = cheatCode.sequence[nextIndex];
+          const nextIsRepeat = nextStep.some(
+            (note) =>
+              note.string === matchedNote.string && note.fret === matchedNote.fret
+          );
+          if (nextIsRepeat) {
+            needsNewOnsetRef.current = true;
+          }
+        }
+
         setNoteStates((prev) => {
           const newStates = [...prev];
           newStates[currentIndex] = 'success';
@@ -128,6 +183,8 @@ export function useCheatCodeValidation(
               return newStates;
             });
             setLoopCount((prevCount) => prevCount + 1);
+            lastValidatedNoteRef.current = null;
+            needsNewOnsetRef.current = false;
             return loopStart;
           }
           return newIndex;
@@ -146,7 +203,7 @@ export function useCheatCodeValidation(
         }, 200);
       }
     },
-    [cheatCode, currentIndex, isComplete, checkNoteMatch, streak, lastValidatedTime, isLoopActive, loopStart, loopEnd]
+    [cheatCode, currentIndex, isComplete, checkNoteMatch, streak, lastValidatedTime, isLoopActive, loopStart, loopEnd, isOnset, isRepeatedNote]
   );
 
   const reset = useCallback(() => {
@@ -161,6 +218,9 @@ export function useCheatCodeValidation(
     setLastValidatedTime(0);
     setIsWaitingForNote(true);
     setLoopCount(0);
+    lastValidatedNoteRef.current = null;
+    needsNewOnsetRef.current = false;
+    lastOnsetRef.current = false;
   }, [sequenceLength]);
 
   return {

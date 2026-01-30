@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Fretboard } from '@/components/fretboard/Fretboard';
-import { SequenceProgress } from '@/components/cheatcode/SequenceProgress';
+import { ScrollingTablature } from '@/components/tablature/ScrollingTablature';
 import { LoopControls } from '@/components/cheatcode/LoopControls';
 import { TempoControls } from '@/components/cheatcode/TempoControls';
 import { ScoreDisplay } from '@/components/stats/ScoreDisplay';
@@ -36,7 +36,7 @@ export default function PlayCheatCodePage() {
   saveSessionRef.current = saveSession;
 
   const { status: micStatus, stream, error, requestAccess, stopMicrophone } = useMicrophone();
-  const { detectedNote, isListening } = usePitchDetection(stream, {
+  const { detectedNote, isListening, isOnset } = usePitchDetection(stream, {
     minClarity: 0.85,
     minVolume: 0.01,
   });
@@ -45,6 +45,7 @@ export default function PlayCheatCodePage() {
     useCheatCodeValidation(cheatCode, {
       loopStart,
       loopEnd,
+      isOnset,
     });
 
   const {
@@ -140,14 +141,14 @@ export default function PlayCheatCodePage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        {/* Sequence */}
+        {/* Scrolling Tablature */}
         <div className="py-8 bg-[#0d111c]">
-          <div className="max-w-3xl mx-auto px-6">
-            <h2 className="text-sm font-medium text-gray-400 mb-4 text-center">Sequence</h2>
-            <SequenceProgress
+          <div className="max-w-4xl mx-auto px-6">
+            <ScrollingTablature
               sequence={cheatCode.sequence}
               currentIndex={currentIndex}
               noteStates={noteStates}
+              visibleNotes={12}
             />
           </div>
         </div>
