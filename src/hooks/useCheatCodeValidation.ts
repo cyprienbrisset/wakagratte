@@ -8,6 +8,8 @@ import { getFretFrequency } from '@/lib/music/notes';
 interface UseCheatCodeValidationOptions {
   pitchTolerance?: number; // cents
   timingTolerance?: number; // ms
+  loopStart?: number | null;  // index de début (inclus), null = pas de loop
+  loopEnd?: number | null;    // index de fin (inclus)
 }
 
 interface UseCheatCodeValidationReturn {
@@ -17,6 +19,7 @@ interface UseCheatCodeValidationReturn {
   score: number;
   streak: number;
   isWaitingForNote: boolean;
+  loopCount: number;  // nombre de loops complétés
   validateNote: (detectedNote: DetectedNote | null) => void;
   reset: () => void;
 }
@@ -25,7 +28,7 @@ export function useCheatCodeValidation(
   cheatCode: CheatCode | null,
   options: UseCheatCodeValidationOptions = {}
 ): UseCheatCodeValidationReturn {
-  const { pitchTolerance = 40 } = options; // 40 cents = moins d'un demi-ton
+  const { pitchTolerance = 40, loopStart = null, loopEnd = null } = options; // 40 cents = moins d'un demi-ton
 
   const sequenceLength = cheatCode?.sequence.length || 0;
 
@@ -37,6 +40,7 @@ export function useCheatCodeValidation(
   const [streak, setStreak] = useState(0);
   const [lastValidatedTime, setLastValidatedTime] = useState(0);
   const [isWaitingForNote, setIsWaitingForNote] = useState(true);
+  const [loopCount, setLoopCount] = useState(0);
   const waitingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Reset when cheatCode changes
@@ -47,6 +51,7 @@ export function useCheatCodeValidation(
     setStreak(0);
     setLastValidatedTime(0);
     setIsWaitingForNote(true);
+    setLoopCount(0);
   }, [cheatCode?.id, sequenceLength]);
 
   // Cleanup timeout on unmount
@@ -58,9 +63,13 @@ export function useCheatCodeValidation(
     };
   }, []);
 
+  const isLoopActive = loopStart !== null && loopEnd !== null;
+
   const isComplete = useMemo(() => {
+    // Never complete when loop is active
+    if (isLoopActive) return false;
     return currentIndex >= sequenceLength && sequenceLength > 0;
-  }, [currentIndex, sequenceLength]);
+  }, [currentIndex, sequenceLength, isLoopActive]);
 
   // Vérifie si la note détectée correspond à l'une des notes du groupe (double stop)
   const checkNoteMatch = useCallback(
@@ -106,7 +115,23 @@ export function useCheatCodeValidation(
 
         setScore((prev) => prev + noteScore);
         setStreak((prev) => prev + 1);
-        setCurrentIndex((prev) => prev + 1);
+        setCurrentIndex((prev) => {
+          const newIndex = prev + 1;
+          // Handle loop logic
+          if (isLoopActive && loopEnd !== null && loopStart !== null && newIndex > loopEnd) {
+            // Reset note states for the loop range
+            setNoteStates((prevStates) => {
+              const newStates = [...prevStates];
+              for (let i = loopStart; i <= loopEnd; i++) {
+                newStates[i] = 'waiting';
+              }
+              return newStates;
+            });
+            setLoopCount((prevCount) => prevCount + 1);
+            return loopStart;
+          }
+          return newIndex;
+        });
         setLastValidatedTime(now);
 
         // Visual feedback for wait mode
@@ -121,7 +146,7 @@ export function useCheatCodeValidation(
         }, 200);
       }
     },
-    [cheatCode, currentIndex, isComplete, checkNoteMatch, streak, lastValidatedTime]
+    [cheatCode, currentIndex, isComplete, checkNoteMatch, streak, lastValidatedTime, isLoopActive, loopStart, loopEnd]
   );
 
   const reset = useCallback(() => {
@@ -135,6 +160,7 @@ export function useCheatCodeValidation(
     setStreak(0);
     setLastValidatedTime(0);
     setIsWaitingForNote(true);
+    setLoopCount(0);
   }, [sequenceLength]);
 
   return {
@@ -144,6 +170,7 @@ export function useCheatCodeValidation(
     score,
     streak,
     isWaitingForNote,
+    loopCount,
     validateNote,
     reset,
   };

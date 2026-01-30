@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Fretboard } from '@/components/fretboard/Fretboard';
 import { SequenceProgress } from '@/components/cheatcode/SequenceProgress';
+import { LoopControls } from '@/components/cheatcode/LoopControls';
 import { useMicrophone } from '@/hooks/useMicrophone';
 import { usePitchDetection } from '@/hooks/usePitchDetection';
 import { useCheatCodeValidation } from '@/hooks/useCheatCodeValidation';
@@ -18,14 +19,20 @@ export default function PlayCheatCodePage() {
 
   const cheatCode = useMemo(() => getCheatCodeById(cheatId) ?? null, [cheatId]);
 
+  const [loopStart, setLoopStart] = useState<number | null>(null);
+  const [loopEnd, setLoopEnd] = useState<number | null>(null);
+
   const { status: micStatus, stream, error, requestAccess, stopMicrophone } = useMicrophone();
   const { detectedNote, isListening } = usePitchDetection(stream, {
     minClarity: 0.85,
     minVolume: 0.01,
   });
 
-  const { currentIndex, noteStates, isComplete, isWaitingForNote, reset, validateNote } =
-    useCheatCodeValidation(cheatCode);
+  const { currentIndex, noteStates, isComplete, isWaitingForNote, loopCount, reset, validateNote } =
+    useCheatCodeValidation(cheatCode, {
+      loopStart,
+      loopEnd,
+    });
 
   useEffect(() => {
     if (detectedNote && isListening && !isComplete) {
@@ -118,43 +125,60 @@ export default function PlayCheatCodePage() {
               </div>
             ) : (
               <div className="bg-[#151a28] rounded-2xl p-6 border border-white/5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {isListening && (
-                      <>
-                        <span className="w-3 h-3 rounded-full bg-amber-500 animate-pulse" />
-                        <span className="text-sm text-gray-400">
-                          {detectedNote ? (
-                            <span className="text-white font-medium">{detectedNote.note}{detectedNote.octave}</span>
+                <div className="flex flex-col gap-4">
+                  <LoopControls
+                    sequenceLength={cheatCode.sequence.length}
+                    loopStart={loopStart}
+                    loopEnd={loopEnd}
+                    onLoopChange={(start, end) => {
+                      // Si les deux sont définis et start > end, ne pas accepter
+                      if (start !== null && end !== null && start > end) {
+                        return;
+                      }
+                      setLoopStart(start);
+                      setLoopEnd(end);
+                    }}
+                    loopCount={loopCount}
+                    disabled={!isListening}
+                  />
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {isListening && (
+                        <>
+                          <span className="w-3 h-3 rounded-full bg-amber-500 animate-pulse" />
+                          <span className="text-sm text-gray-400">
+                            {detectedNote ? (
+                              <span className="text-white font-medium">{detectedNote.note}{detectedNote.octave}</span>
+                            ) : (
+                              'En ecoute...'
+                            )}
+                          </span>
+                          {isWaitingForNote ? (
+                            <span className="text-sm text-amber-400 animate-pulse">En attente de la note...</span>
                           ) : (
-                            'En écoute...'
+                            <span className="text-sm text-emerald-400">Note validee!</span>
                           )}
-                        </span>
-                        {isWaitingForNote ? (
-                          <span className="text-sm text-amber-400 animate-pulse">En attente de la note...</span>
-                        ) : (
-                          <span className="text-sm text-emerald-400">Note validée!</span>
-                        )}
-                      </>
-                    )}
-                    {error && <span className="text-sm text-red-400">{error}</span>}
-                  </div>
+                        </>
+                      )}
+                      {error && <span className="text-sm text-red-400">{error}</span>}
+                    </div>
 
-                  <div className="flex gap-3">
-                    {currentIndex > 0 && (
-                      <Button onClick={reset} variant="ghost" size="sm">
-                        Réinitialiser
-                      </Button>
-                    )}
-                    {!isListening ? (
-                      <Button onClick={requestAccess} disabled={micStatus === 'requesting'} size="sm">
-                        {micStatus === 'requesting' ? 'Autorisation...' : 'Démarrer'}
-                      </Button>
-                    ) : (
-                      <Button onClick={stopMicrophone} variant="secondary" size="sm">
-                        Arrêter
-                      </Button>
-                    )}
+                    <div className="flex gap-3">
+                      {currentIndex > 0 && (
+                        <Button onClick={reset} variant="ghost" size="sm">
+                          Reinitialiser
+                        </Button>
+                      )}
+                      {!isListening ? (
+                        <Button onClick={requestAccess} disabled={micStatus === 'requesting'} size="sm">
+                          {micStatus === 'requesting' ? 'Autorisation...' : 'Demarrer'}
+                        </Button>
+                      ) : (
+                        <Button onClick={stopMicrophone} variant="secondary" size="sm">
+                          Arreter
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
